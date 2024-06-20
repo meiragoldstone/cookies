@@ -4,7 +4,7 @@ Website of Cookie Recipes
 ## Features
 * Create new recipes 
 * Read/view existing recipes
-* Updating (add to) existing lists
+* Update (add to) existing lists
 
 ## Specifications 
 * React
