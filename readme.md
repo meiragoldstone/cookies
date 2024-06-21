@@ -1,5 +1,5 @@
 # Cookie Cookbook
-Website of Cookie Recipes
+This will be an amazing website of delicious cookie recipes!
 
 ## Features
 * Create new recipes 
@@ -9,7 +9,7 @@ Website of Cookie Recipes
 ## Specifications 
 * React
 * Node.js
-* Database ?
+* DynamoDB
 
 ## Access 
 * Github -
@@ -18,5 +18,5 @@ Website of Cookie Recipes
 
 ## Authors
 * Daniella Shoob
-* Rivka Benyowitz
+* Rivka Benyowitz 
 * Chana Bayla Katz
