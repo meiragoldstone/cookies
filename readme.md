@@ -1,5 +1,5 @@
 # Cookie Cookbook
-Website of Delicious Cookie Recipes!
+Website of Delicious and Amazing Cookie Recipes!
 
 ## Features
 * Create new recipes 
@@ -9,7 +9,7 @@ Website of Delicious Cookie Recipes!
 ## Specifications 
 * React
 * Node.js
-* Database ?
+* DynamoDB
 
 ## Access 
 * Github -
