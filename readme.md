@@ -9,7 +9,7 @@ Website of Cookie Recipes
 ## Specifications 
 * React
 * Node.js
-* Database ?
+* DynamoDB
 
 ## Access 
 * Github -
