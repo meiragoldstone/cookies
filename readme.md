@@ -1,5 +1,5 @@
 # Cookie Cookbook
-Website of Cookie Recipes
+Website of Delicious Cookie Recipes!
 
 ## Features
 * Create new recipes 
