@@ -1,51 +1,23 @@
 import { useState } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
+import React from 'react';
 
-function AboutPage() {
-    const [index, setIndex] = useState(0);
-        
-    const handleSelect = (selectedIndex) => {
-        setIndex(selectedIndex);
-    };
-    
-    return (
-            <Carousel activeIndex={index} onSelect={handleSelect}>
-            <Carousel.Item>
-                <Carousel.Caption>
-                <h3>About Cookie Cookbook</h3>
-                <p>
-                    Cookie Cookbook is a website to share cookie recipes. 
-                    Anyone can create a new recipe, update a recipe, or delete an existing recipe.
-                </p>
-                </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-                <Carousel.Caption>
-                <h3>Behind the Scenes</h3>
-                <p>
-                    Chana Bayla Katz, Daniella Shoob, and Rivka Benyowitz are senior Computer Science student in WITS.
-                    Together, they created this website for their capstone project in WITS.
-                </p>
-                </Carousel.Caption>
-            </Carousel.Item>
-            </Carousel>
+const About = () => {
+    return(
+        <div>
+            <h1>About Cookie Cookbook</h1>
+            <p>
+                Cookie Cookbook is a website to share cookie recipes. 
+                Anyone can create a new recipe, update a recipe, or delete an existing recipe.
+            </p>
 
-          
-  
-        // <>
-        //     <h1>About Cookie Cookbook</h1>
-        //     <p>
-        //         Cookie Cookbook is a website to share cookie recipes. 
-        //         Anyone can create a new recipe, update a recipe, or delete an existing recipe.
-        //     </p>
+            <h2>Behind the Scenes</h2>
+            <p>
+                Chana Bayla Katz, Daniella Shoob, and Rivka Benyowitz are senior Computer Science student in WITS.
+                Together, they created this website for their capstone project in WITS.
+            </p>
 
-        //     <h2>Behind the Scenes</h2>
-        //     <p>
-        //         Chana Bayla Katz, Daniella Shoob, and Rivka Benyowitz are senior Computer Science student in WITS.
-        //         Together, they created this website for their capstone project in WITS.
-        //     </p>
-
-        // </>
+        </div>
     );
 }
-export default AboutPage;
+export default About;

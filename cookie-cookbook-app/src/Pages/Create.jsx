@@ -1,4 +1,6 @@
-function Create() {
+import React from 'react';
+
+const Create = () => {
     return (
         <>
             <h1>Cookie Cookbook</h1>
