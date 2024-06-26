@@ -1,19 +1,42 @@
 import React from 'react';
 import { useState } from 'react';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import Form from 'react-bootstrap/Form';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 const Update = () => {
-    const [recipeList, setRecipeList] = useState({"Banana":["Flour", "Sugar"], "Chocolate":["Oil", "Eggs"]})
+    const [recipeList, setRecipeList] = useState([{key:"Banana", value:{1:"Flour", 2:"Sugar"}}, {key:"Chocolate", value:{1:"Oil", 2:"Eggs"}}])
     const [chosenRecipe, setChosenRecipe] = useState({})
+
+    const handleSelectChange = (event) => {
+        setChosenRecipe(event.target.value);
+
+        return (
+            <>
+                <Card style={{ width: '50%' }}>
+                <Card.Header>{Object.keys(chosenRecipe)[0]}</Card.Header>
+                <ListGroup variant="flush">
+                    {Object.valules(chosenRecipe).map((ingredient) => (
+                    <option key = {ingredient.key} value={recipe} >{recipe.key}</option>)    
+                    )}
+                    <ListGroup.Item>Cras justo odio</ListGroup.Item>
+                    <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
+                    <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+                </ListGroup>
+                </Card>
+            </>
+        )
+    }
 
     return (
         <>
-            <DropdownButton variant = "secondary" id="dropdown-basic-button" title="Choose A Recipe">
-            {Object.keys(recipeList).forEach(key => {
-                <Dropdown.Item href="/About">{key}</Dropdown.Item>;     
-            })}
-            </DropdownButton>
+            <Form.Select aria-label="Default select example" size="lg" onChange = "handleSelectChange(event)">
+                <option>Choose A Recipe</option>
+                {recipeList.map((recipe) => (
+                    <option key = {recipe.key} value={recipe} >{recipe.key}</option>)    
+                )}
+
+            </Form.Select>
         </>
 
 //         // Loop through each key in the itemsObject
