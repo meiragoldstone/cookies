@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 
 const RetrieveList = () => {
     const [listData, setListData] = useState([
         { id: 1, name: 'Chocolate Chip Cookies', items: ['Flour', 'Sugar', 'Chocolate Chips', 'Oil'] },
-        { id: 2, name: 'Cheesecake Cookie', items: ['Cream Cheese', 'Eggs', 'Sugar'] },
-        { id: 3, name: 'Birthday Cookie', items: ['Flour', 'Sugar', 'Oil', 'Sprinkles'] },
+        { id: 2, name: 'Cheesecake Cookies', items: ['Cream Cheese', 'Eggs', 'Sugar'] },
+        { id: 3, name: 'Birthday Cookies', items: ['Flour', 'Sugar', 'Oil', 'Sprinkles'] },
     ]);
 
     const [selectedList, setSelectedList] = useState(null);
@@ -36,14 +42,19 @@ const RetrieveList = () => {
         setListExists(exists);
     }, [searchedList, listData]);
 
+    const clearSelection = () => {
+        setSelectedList(null);
+        setSearchedList('');
+        setListExists(false);
+    };
+
     return (
-        <div className="container mt-5">
+        <Container className="mt-5">
             <h1 className="text-center mb-4">Retrieve List from Database</h1>
 
-            <div className="row justify-content-center mb-4">
-                <div className="col-md-6">
-                    <select
-                        className="form-select"
+            <Row className="justify-content-center mb-4">
+                <Col md={6}>
+                    <Form.Select
                         value={selectedList ? selectedList.id : ''}
                         onChange={handleDropdownChange}
                     >
@@ -51,60 +62,58 @@ const RetrieveList = () => {
                         {listData.map((list) => (
                             <option key={list.id} value={list.id}>{list.name}</option>
                         ))}
-                    </select>
-                </div>
-            </div>
+                    </Form.Select>
+                </Col>
+            </Row>
 
-            <div className="row justify-content-center mb-3">
-                <div className="col-md-6">
+            <Row className="justify-content-center mb-3">
+                <Col md={6}>
                     <p className="text-center">Type a list name to see if it exists:</p>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
-            <div className="row justify-content-center mb-4">
-                <div className="col-md-6">
-                    <div className="input-group">
-                        <input
+            <Row className="justify-content-center mb-4">
+                <Col md={6}>
+                    <Form.Group className="mb-3">
+                        <Form.Control
                             type="text"
-                            className="form-control"
                             placeholder="Enter list name..."
                             value={searchedList}
                             onChange={handleInputChange}
                         />
-                        <button
-                            className="btn btn-outline-primary"
-                            type="button"
-                            onClick={() => setSelectedList(null)}
+                        <Button
+                            variant="outline-primary"
+                            onClick={clearSelection}
                         >
                             Clear Selection
-                        </button>
-                    </div>
+                        </Button>
+                    </Form.Group>
                     {searchedList.trim() !== '' && listExists &&
                         <p className="text-success mt-2">List with name "{searchedList}" exists.</p>
                     }
                     {searchedList.trim() !== '' && !listExists &&
                         <p className="text-danger mt-2">List with name "{searchedList}" does not exist.</p>
                     }
-                </div>
-            </div>
+                </Col>
+            </Row>
 
             {selectedList && (
-                <div className="row justify-content-center mt-4">
-                    <div className="col-md-6">
-                        <div className="card">
-                            <div className="card-body">
-                                <h5 className="card-title">{selectedList.name}</h5>
+                <Row className="justify-content-center mt-4">
+                    <Col md={6}>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>{selectedList.name}</Card.Title>
                                 <ul className="list-group list-group-flush">
                                     {selectedList.items.map((item, index) => (
                                         <li key={index} className="list-group-item">{item}</li>
                                     ))}
                                 </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
             )}
-        </div>
+        </Container>
     );
 };
 
