@@ -4,10 +4,16 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
 
 const Update = () => {
     const [recipeList, setRecipeList] = useState([{"Banana":[{1:"Flour"}, {2:"Sugar"}]}, {"Chocolate":[{1:"Oil"}, {2:"Eggs"}]}])
     const [chosenRecipe, setChosenRecipe] = useState({"Sample Recipe":[{1:"something sweet"}, {2:"something spicy"}]})
+    const [inputValue, setInputValue] = useState("");
+    const [saveSuccessMsg, setSaveSuccessMsg] = useState("");
 
     const handleSelectChange = (event) => {
         const selectedKey = event.target.value;
@@ -15,73 +21,126 @@ const Update = () => {
         setChosenRecipe(recipe);
     }
 
-    const handleButtonClick = (event) => {
-        
-
-    }
-
     const handleFormControlChange = (event) => {
-        const addition = event.target.value;
-        const additionKey = Object.values(chosenRecipe).length + 2
-        const recipeName = Object.keys(chosenRecipe)[0]
-        const newRecipeList = [...Object.values(chosenRecipe), {additionKey:addition}]
-        const updatedRecipe = {recipeName:newRecipeList}
+        setInputValue(event.target.value);
 
-        console.log("addition: ", addition);
-        console.log("additionKey: ", additionKey);
-        console.log("recipeName: ", recipeName);
-        console.log("newRecipeLsit: ", newRecipeList);
-
-
-        setChosenRecipe(updatedRecipe);
     }
+
+    const handleButtonPreview = (event) => {
+        if (inputValue.trim() !== ""){
+            const recipeName = Object.keys(chosenRecipe)[0];
+            const additionKey = Object.values(chosenRecipe[recipeName]).length + 1;
+
+            const newRecipeList = [...chosenRecipe[recipeName], {[additionKey]:inputValue}];
+            const updatedRecipe = {[recipeName]:newRecipeList};
+
+            setChosenRecipe(updatedRecipe);
+        }
+
+        // clear form control after add the input
+        setInputValue("");
+
+    }
+
+    const handleButtonSave = (event) => {
+        const updatedRecipeList = recipeList.map(recipe => {
+            const recipeName = Object.keys(recipe)[0];
+            if (recipeName === Object.keys(chosenRecipe)[0]){
+                return chosenRecipe;
+            }
+            else{
+                return recipe;
+            }
+        });
+
+        setRecipeList(updatedRecipeList);
+
+        setSaveSuccessMsg("The recipe for " + Object.keys(chosenRecipe)[0] + " was successfully updated and saved!");
+        setTimeout(() => {
+            setSaveSuccessMsg("");
+        }, 60000);
+
+
+        updatedRecipeList.map(recipe => {
+            console.log(recipe);
+        })
+        
+    }
+
 
     return (
         <>
-            <Form.Select aria-label="Default select example" size="lg" onChange = {(event) => handleSelectChange(event)}>
-                <option disabled>Choose A Recipe</option>
-                {recipeList.map((recipe, index) => (
-                    <option key = {index} value={Object.keys(recipe)[0]} >{Object.keys(recipe)[0]}</option>)    
-                )}
+            <Container>
+                <Row className = "m-5">
+                    <Col className = "m-2">
+                        <Form.Select aria-label="Default select example" size="lg" onChange = {(event) => handleSelectChange(event)}>
+                            <option disabled>Choose A Recipe</option>
+                            {recipeList.map((recipe, index) => (
+                                <option key = {index} value={Object.keys(recipe)[0]} >{Object.keys(recipe)[0]}</option>)    
+                            )}
 
-            </Form.Select>
+                        </Form.Select>
+                    </Col>
+                </Row>
 
-            <Card style={{ width: '50%' }}>
-                <Card.Header>{Object.keys(chosenRecipe)[0]}</Card.Header>
-                <ListGroup variant="flush">
-                    {chosenRecipe[Object.keys(chosenRecipe)[0]].map((ingredients, index) => (
-                        <ListGroup.Item key = {index}>{Object.values(ingredients)}</ListGroup.Item>)
-                        
-                    )}
-                </ListGroup>
-            </Card>
+                <Row className = "m-4">
+                    <Col className = "m-2">
+                        <Card style={{ width: '100%' }}>
+                            <Card.Header>{Object.keys(chosenRecipe)[0]}</Card.Header>
+                            <ListGroup variant="flush">
+                                {chosenRecipe[Object.keys(chosenRecipe)[0]].map((ingredients, index) => (
+                                    <ListGroup.Item key = {index}>{Object.values(ingredients)}</ListGroup.Item>)
+                                    
+                                )}
+                            </ListGroup>
+                        </Card>
+                    </Col>
+                    <Col className = "m-2">
+                        <Container>
+                            <Row>
+                                <Col>
+                                    <Form>
+                                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                            <Form.Label>To add an ingredient or set of directions to this recipe, type the desired addition below, preview your changes and then click SAVE CHANGES.</Form.Label>
+                                            <Form.Control as="textarea" rows={3} placeholder="1/2 Cup Something Sweet" onChange={handleFormControlChange} value = {inputValue}/>
+                                        </Form.Group>
+                                    </Form>
+                                </Col>
+                            </Row>
 
-            <Form>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                    <Form.Label>To add an ingredient or set of directions to this recipe, type the desired addition below and press UPDATE RECIPE.</Form.Label>
-                    <Form.Control as="textarea" rows={3} placeholder="1/2 Cup Something Sweet" onChange={handleFormControlChange}/>
-                </Form.Group>
-            </Form>
+                            <Row>
+                                <Col>
+                                    <Button variant="dark" onClick={handleButtonPreview}>PREVIEW</Button>
+                                </Col>
+                                <Col>
+                                    <Button variant="dark" onClick={handleButtonSave}>SAVE CHANGES</Button>
+                                </Col>
+                            </Row>
+                        </Container>           
+                    </Col>
+                </Row>
 
-            <Button variant="dark" onClick={handleButtonClick}>UPDATE RECIPE</Button>
+                <Row>
+                    <Col>
+                        {saveSuccessMsg &&
+                            <Alert variant="success" onClose={() => setSaveSuccessMsg("")} dismissible>
+                                {saveSuccessMsg}
+                            </Alert>
+                        }     
+                    </Col>
+                </Row>
+            </Container>
 
+
+
+            
+
+            
+
+            
+            
         </>
 
-//         // Loop through each key in the itemsObject
-// Object.keys(itemsObject).forEach(key => {
-//     console.log(`Key: ${key}`);
-//     // Access the array of items for each key
-//     itemsObject[key].forEach(item => {
-//       console.log(`Item: ${item}`);
-//     });
-//   });
-
-        // <>
-        //     <h1>Cookie Cookbook</h1>
-        //     <p>
-        //         This is the update page of the cookie cookbook website. 
-        //     </p>
-        // </>
     );
 }
 
