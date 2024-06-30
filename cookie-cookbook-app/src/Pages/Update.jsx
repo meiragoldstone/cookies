@@ -71,10 +71,13 @@ const Update = () => {
     return (
         <>
             <Container>
+                <Row className = "m-5 text-center">
+                    <Col><h1>Update a Recipe</h1></Col>
+                </Row>
                 <Row className = "m-5">
                     <Col className = "m-2">
-                        <Form.Select aria-label="Default select example" size="lg" onChange = {(event) => handleSelectChange(event)}>
-                            <option disabled>Choose A Recipe</option>
+                        <Form.Select aria-label="Default select example" size="lg" onChange = {(event) => handleSelectChange(event)} defaultValue = "Choose a recipe...">
+                            <option disabled>Choose a recipe...</option>
                             {recipeList.map((recipe, index) => (
                                 <option key = {index} value={Object.keys(recipe)[0]} >{Object.keys(recipe)[0]}</option>)    
                             )}
