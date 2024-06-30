@@ -19,6 +19,44 @@ const About = () => {
                 </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="1" className = "m-2 text-center">
+                <Accordion.Header className = "text-center">How to Create a Recipe</Accordion.Header>
+                <Accordion.Body>
+                    To create a new delicious recipe, just follow these four simple steps.
+                    <ol>
+                        <li>Click the "Create Recipe" option on the site header.</li>
+                        <li>Choose an innovative name for your new cookie.</li>
+                        <li>Write up the list of ingredients and directions to make your cookie.</li>
+                        <li>Save your scrumptious recipe by clicking the "Save Recipe" button.</li>
+                    </ol>
+                    That's it! After following these steps, your special recipe will be available for all to try and taste!
+                </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="2" className = "m-2 text-center">
+                <Accordion.Header className = "text-center">How to Find a Recipe</Accordion.Header>
+                <Accordion.Body>
+                    To find your favorite cookie recipe, just follow these three simple steps.
+                    <ol>
+                        <li>Click the "Find a Recipe" option on the site header.</li>
+                        <li>Check if the recipe exists by typing the recipe name in the text area under the instructions "Type a list name to see if it exists:".</li>
+                        <li>Choose your desired recipe from the dropdown list at the top of the page.</li>
+                    </ol>
+                    That's it! After following these steps, your delectable cookie recipe will appear at the bottom of the page.
+                </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="3" className = "m-2 text-center">
+                <Accordion.Header className = "text-center">How to Update a Recipe</Accordion.Header>
+                <Accordion.Body>
+                    To update a cookie recipe, just follow these three simple steps.
+                    <ol>
+                        <li>Click the "Update a Recipe" option on the site header.</li>
+                        <li>Choose your desired recipe from the dropdown list at the top of the page.</li>
+                        <li>Review the recipe that opens on the left side of the page.</li>
+                        <li></li>
+                    </ol>
+                    That's it! After following these steps, your delectable cookie recipe will appear at the bottom of the page.
+                </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="4" className = "m-2 text-center">
                 <Accordion.Header className = "text-center">Behind the Scenes</Accordion.Header>
                 <Accordion.Body>
 
