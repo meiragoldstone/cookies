@@ -3,14 +3,19 @@ import Carousel from 'react-bootstrap/Carousel';
 import React from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Alert from 'react-bootstrap/Alert';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Image from 'react-bootstrap/Image';
 
 const About = () => {
     return(
         <>
-            <Alert variant="dark" className = "m-5 text-center">
-                About Cookie Cookbook
-            </Alert>
-            <Accordion defaultActiveKey="0" className = "m-5">
+            <Image src = "cookie-cookbook-app\src\Pages\Cookie-Variations.jpg" alt = "Cookie-Variations.jpg" />
+            <h1 className = "m-5 text-center">
+                About Us
+            </h1>
+            <Accordion className = "m-5">
                 <Accordion.Item eventKey="0" className = "m-2">
                 <Accordion.Header className = "text-center">About Our Website</Accordion.Header>
                 <Accordion.Body>
@@ -18,42 +23,77 @@ const About = () => {
                     
                 </Accordion.Body>
                 </Accordion.Item>
+
                 <Accordion.Item eventKey="1" className = "m-2 text-center">
                 <Accordion.Header className = "text-center">How to Create a Recipe</Accordion.Header>
                 <Accordion.Body>
-                    To create a new delicious recipe, just follow these four simple steps.
-                    <ol>
-                        <li>Click the "Create Recipe" option on the site header.</li>
-                        <li>Choose an innovative name for your new cookie.</li>
-                        <li>Write up the list of ingredients and directions to make your cookie.</li>
-                        <li>Save your scrumptious recipe by clicking the "Save Recipe" button.</li>
-                    </ol>
-                    That's it! After following these steps, your special recipe will be available for all to try and taste!
+                    <Container>
+                        <Row className = "m-3">
+                            <Col><strong>To create a new delicious recipe, just follow these four simple steps.</strong></Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <ol className = "list-unstyled">
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">1.</span>Click the "Create Recipe" option on the site header.</li>
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">2.</span>Choose an innovative name for your new cookie.</li>
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">3.</span>Write up the list of ingredients and directions to make your cookie.</li>
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">4.</span>Save your scrumptious recipe by clicking the "Save Recipe" button.</li>
+                                </ol>
+                            </Col>
+                        </Row>
+                        <Row className = "m-3">
+                            <Col><strong>That's it! After following these steps, your special recipe will be available for all to try and taste!</strong></Col>
+                        </Row>
+                    </Container>    
                 </Accordion.Body>
                 </Accordion.Item>
+
                 <Accordion.Item eventKey="2" className = "m-2 text-center">
                 <Accordion.Header className = "text-center">How to Find a Recipe</Accordion.Header>
                 <Accordion.Body>
-                    To find your favorite cookie recipe, just follow these three simple steps.
-                    <ol>
-                        <li>Click the "Find a Recipe" option on the site header.</li>
-                        <li>Check if the recipe exists by typing the recipe name in the text area under the instructions "Type a list name to see if it exists:".</li>
-                        <li>Choose your desired recipe from the dropdown list at the top of the page.</li>
-                    </ol>
-                    That's it! After following these steps, your delectable cookie recipe will appear at the bottom of the page.
+                    <Container>
+                        <Row className = "m-3">
+                            <Col><strong>To find your favorite cookie recipe, just follow these three simple steps.</strong></Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <ol className = "list-unstyled">
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">1.</span>Click the "Find a Recipe" option on the site header.</li>
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">2.</span>Check if the recipe exists by typing the recipe name in the text area under the instructions "Type a list name to see if it exists:".</li>
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">3.</span>Choose your desired recipe from the dropdown list at the top of the page.</li>
+                                </ol>
+                            </Col>
+                        </Row>
+                        <Row className = "m-3">
+                            <Col><strong>That's it! After following these steps, your delectable cookie recipe will appear at the bottom of the page.</strong></Col>
+                        </Row>
+                    </Container>
                 </Accordion.Body>
                 </Accordion.Item>
+
                 <Accordion.Item eventKey="3" className = "m-2 text-center">
                 <Accordion.Header className = "text-center">How to Update a Recipe</Accordion.Header>
                 <Accordion.Body>
-                    To update a cookie recipe, just follow these three simple steps.
-                    <ol>
-                        <li>Click the "Update a Recipe" option on the site header.</li>
-                        <li>Choose your desired recipe from the dropdown list at the top of the page.</li>
-                        <li>Review the recipe that opens on the left side of the page.</li>
-                        <li></li>
-                    </ol>
-                    That's it! After following these steps, your delectable cookie recipe will appear at the bottom of the page.
+                    <Container>
+                        <Row className = "m-3">
+                            <Col><strong>To update a cookie recipe, just follow these six simple steps.</strong></Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <ol className = "list-unstyled">
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">1.</span>Click the "Update a Recipe" option on the site header.</li>
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">2.</span>Choose your desired recipe from the dropdown list at the top of the page.</li>
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">3.</span>Review the recipe that is displayed on the left side of the page.</li>
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">4.</span>Type any additions into the text area on the right side of the page.</li>
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">5.</span>Click "Preview" to preview your changes.</li>
+                                    <li className="d-flex align-items-start mb-1"><span className="mr-2">6.</span>Click "Save Changes" to save your changes.</li>
+                                </ol>
+                            </Col>
+                        </Row>
+                        <Row className = "m-3">
+                            <Col><strong>That's it! After following these steps, the changes for your mouthwatering cookie recipe will be saved.</strong></Col>
+                        </Row>
+                    </Container>
                 </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="4" className = "m-2 text-center">
