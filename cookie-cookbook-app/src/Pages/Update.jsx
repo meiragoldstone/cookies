@@ -13,6 +13,7 @@ const Update = () => {
     const [recipeList, setRecipeList] = useState([{"Banana":[{1:"Flour"}, {2:"Sugar"}]}, {"Chocolate":[{1:"Oil"}, {2:"Eggs"}]}])
     const [chosenRecipe, setChosenRecipe] = useState({"Sample Recipe":[{1:"something sweet"}, {2:"something spicy"}]})
     const [inputValue, setInputValue] = useState("");
+    const [clickedPreview, setClickedPreview] = useState(false);
     const [saveSuccessMsg, setSaveSuccessMsg] = useState("");
 
     const handleSelectChange = (event) => {
@@ -35,6 +36,8 @@ const Update = () => {
             const updatedRecipe = {[recipeName]:newRecipeList};
 
             setChosenRecipe(updatedRecipe);
+
+            setClickedPreview(true);
         }
 
         // clear form control after add the input
@@ -43,6 +46,10 @@ const Update = () => {
     }
 
     const handleButtonSave = (event) => {
+        if (!clickedPreview){
+            handleButtonPreview();
+        }
+
         const updatedRecipeList = recipeList.map(recipe => {
             const recipeName = Object.keys(recipe)[0];
             if (recipeName === Object.keys(chosenRecipe)[0]){
@@ -64,8 +71,11 @@ const Update = () => {
         updatedRecipeList.map(recipe => {
             console.log(recipe);
         })
-        
+
+        setClickedPreview(false);
+
     }
+
 
 
     return (
