@@ -10,17 +10,17 @@ import Image from 'react-bootstrap/Image';
 
 const About = () => {
 
-    const image1 = require("./Cookie-Variations.jpg")
+    const image1 = require("../Images/Baking-Cookies.jpg")
 
     return(
         <>
             <Container>
-                <Row className = "m3">
-                    <Col><Image src = {image1} alt = "Cookie-Variations.jpg" className = "img-fluid"/></Col>
-                </Row>
-
                 <Row className = "m-5 text-center">
                     <Col><h1>About Us</h1></Col>
+                </Row>
+                
+                <Row className = "m3 text-center">
+                    <Col><Image src = {image1} alt = "Cookie-Variations.jpg" className = "img-fluid" width = "75%" height = "40%"/></Col>
                 </Row>
 
                 <Row>
