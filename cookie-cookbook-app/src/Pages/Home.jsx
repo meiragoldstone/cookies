@@ -6,6 +6,9 @@ import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 
 const Home = () => {
+
+    const image1 = require("../Images/colorful-cookies.jpg")
+
     return (
         <Container>
             <h1 className="text-center mt-5">Cookie Cookbook</h1>
@@ -15,7 +18,7 @@ const Home = () => {
             <Row className="justify-content-center">
                 <Col xs={12} className="text-center">
                     <h2 className="mt-5">Find Your Favorite Recipes!</h2>
-                    <Image src="/cookie.jpg" fluid alt="cookie" style={{ maxWidth: '100%', height: 'auto' }} />
+                    <Col><Image src = {image1} alt = "colorful-cookies.jpg" className = "img-fluid" width = "75%" height = "40%"/></Col>
                 </Col>
             </Row>
         </Container>
