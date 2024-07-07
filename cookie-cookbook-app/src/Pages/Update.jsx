@@ -11,7 +11,7 @@ import Alert from 'react-bootstrap/Alert';
 
 const Update = () => {
     const [recipeList, setRecipeList] = useState([{"Banana":[{1:"Flour"}, {2:"Sugar"}]}, {"Chocolate":[{1:"Oil"}, {2:"Eggs"}]}])
-    const [chosenRecipe, setChosenRecipe] = useState({"Sample Recipe":[{1:"something sweet"}, {2:"something spicy"}]})
+    const [chosenRecipe, setChosenRecipe] = useState({"Sample Recipe":[{1:"First Ingredient"}, {2:"Second Ingredient"}]})
     const [inputValue, setInputValue] = useState("");
     const [clickedPreview, setClickedPreview] = useState(false);
     const [saveSuccessMsg, setSaveSuccessMsg] = useState("");
@@ -24,7 +24,6 @@ const Update = () => {
 
     const handleFormControlChange = (event) => {
         setInputValue(event.target.value);
-
     }
 
     const handleButtonPreview = (event) => {
@@ -83,8 +82,8 @@ const Update = () => {
             <Container>
                 <Row className = "m-5">
                     <Col className = "m-2">
-                        <Form.Select aria-label="Default select example" size="lg" onChange = {(event) => handleSelectChange(event)}>
-                            <option disabled>Choose A Recipe</option>
+                        <Form.Select aria-label="Default select example" size="lg" onChange = {(event) => handleSelectChange(event)} placeholder = "Choose A Recipe...">
+                            <option disabled selected >Choose A Recipe</option>
                             {recipeList.map((recipe, index) => (
                                 <option key = {index} value={Object.keys(recipe)[0]} >{Object.keys(recipe)[0]}</option>)    
                             )}
@@ -112,7 +111,7 @@ const Update = () => {
                                     <Form>
                                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                             <Form.Label>To add an ingredient or set of directions to this recipe, type the desired addition below, preview your changes and then click SAVE CHANGES.</Form.Label>
-                                            <Form.Control as="textarea" rows={3} placeholder="1/2 Cup Something Sweet" onChange={handleFormControlChange} value = {inputValue}/>
+                                            <Form.Control as="textarea" rows={3} placeholder="Enter your addition here" onChange={handleFormControlChange} value = {inputValue}/>
                                         </Form.Group>
                                     </Form>
                                 </Col>
