@@ -80,6 +80,10 @@ const Update = () => {
     return (
         <>
             <Container>
+                <Row className = "m-5 text-center">
+                    <Col><h1>Update</h1></Col>
+                </Row>
+                
                 <Row className = "m-5">
                     <Col className = "m-2">
                         <Form.Select aria-label="Default select example" size="lg" onChange = {(event) => handleSelectChange(event)}>
