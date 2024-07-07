@@ -82,7 +82,7 @@ const Update = () => {
             <Container>
                 <Row className = "m-5">
                     <Col className = "m-2">
-                        <Form.Select aria-label="Default select example" size="lg" onChange = {(event) => handleSelectChange(event)} placeholder = "Choose A Recipe...">
+                        <Form.Select aria-label="Default select example" size="lg" onChange = {(event) => handleSelectChange(event)}>
                             <option disabled selected >Choose A Recipe</option>
                             {recipeList.map((recipe, index) => (
                                 <option key = {index} value={Object.keys(recipe)[0]} >{Object.keys(recipe)[0]}</option>)    
