@@ -10,10 +10,12 @@ import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
 
 const Update = () => {
-    const [recipeList, setRecipeList] = useState([{"Banana":[{1:"Flour"}, {2:"Sugar"}]}, {"Chocolate":[{1:"Oil"}, {2:"Eggs"}]}])
-    const [chosenRecipe, setChosenRecipe] = useState({"Sample Recipe":[{1:"something sweet"}, {2:"something spicy"}]})
+    const [recipeList, setRecipeList] = useState({})
+    const [chosenRecipe, setChosenRecipe] = useState({})
+    const [chosenRecipeId, setChosenRecipeId] = useState("");
     const [inputValue, setInputValue] = useState("");
-    const [saveSuccessMsg, setSaveSuccessMsg] = useState("");
+    const [isIngredient, setIsIngredient] = useState("False");
+    const [responseMessage, setResponseMessage] = useState({variant: "", message: ""});
 
     const handleSelectChange = (event) => {
         const selectedKey = event.target.value;
@@ -43,27 +45,55 @@ const Update = () => {
     }
 
     const handleButtonSave = (event) => {
-        const updatedRecipeList = recipeList.map(recipe => {
-            const recipeName = Object.keys(recipe)[0];
-            if (recipeName === Object.keys(chosenRecipe)[0]){
-                return chosenRecipe;
+        setResponseMessage({});
+        const queryString = "?listId=" + chosenRecipeId;
+
+        const params = {
+            method: 'GET',
+            body: JSON.stringify({
+                isIngredient: isIngredient,
+                newItem: inputValue,
+            })
+        }
+
+        const apiUrl = "https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/updateRecipe" + queryString;
+
+        fetch(apiUrl, params)
+            .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
             }
-            else{
-                return recipe;
-            }
-        });
-
-        setRecipeList(updatedRecipeList);
-
-        setSaveSuccessMsg("The recipe for " + Object.keys(chosenRecipe)[0] + " was successfully updated and saved!");
-        setTimeout(() => {
-            setSaveSuccessMsg("");
-        }, 60000);
+            return response.json();
+          })
+          .then(_ => {
+            setResponseMessage({variant: 'success', message: `${chosenRecipeId} was updated successfully`});
+          })
+          .catch(_ => {
+            setResponseMessage({variant: 'danger', message:`Error in updating ${chosenRecipeId}`});
+          });
 
 
-        updatedRecipeList.map(recipe => {
-            console.log(recipe);
-        })
+        // const updatedRecipeList = recipeList.map(recipe => {
+        //     const recipeName = Object.keys(recipe)[0];
+        //     if (recipeName === Object.keys(chosenRecipe)[0]){
+        //         return chosenRecipe;
+        //     }
+        //     else{
+        //         return recipe;
+        //     }
+        // });
+
+        // setRecipeList(updatedRecipeList);
+
+        // setSaveSuccessMsg("The recipe for " + Object.keys(chosenRecipe)[0] + " was successfully updated and saved!");
+        // setTimeout(() => {
+        //     setSaveSuccessMsg("");
+        // }, 60000);
+
+
+        // updatedRecipeList.map(recipe => {
+        //     console.log(recipe);
+        // })
         
     }
 
@@ -120,6 +150,13 @@ const Update = () => {
                     </Col>
                 </Row>
 
+                <Row className="mt-5">
+                    <Col>
+                        <Alert variant={responseMessage.variant} onClose = {() => setResponseMessage("")} dismissable>{responseMessage.message}</Alert>
+                    </Col>
+                </Row>
+
+{/* 
                 <Row>
                     <Col>
                         {saveSuccessMsg &&
@@ -128,7 +165,7 @@ const Update = () => {
                             </Alert>
                         }     
                     </Col>
-                </Row>
+                </Row> */}
             </Container>
 
 
