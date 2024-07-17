@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -18,22 +18,63 @@ const Update = () => {
     const [ingredientList, setIngredientList] = useState([]);
     const [directionList, setDirectionList] = useState([]);
     const [clickedPreview, setClickedPreview] = useState(false);
+    const [allRecipes, setAllRecipes] = useState({});
+    const [allRecipeNames, setAllRecipeNames] = useState([]);
+    
 
-    const retrieveRecipe = () => {
-        const recipe = chosenRecipeData?.map((item, index) => {
-            return <li key = {index}>{item}</li>
-        });
-
-        function getRecipeByKey() {
-            const retrieveUrl = "https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/retrieveRecipe?listId=" + chosenRecipeId
-            fetch(retrieveUrl)
+    
+    useEffect(() => {
+        const fetchAllRecipeData = () => {
+          try{
+            const retrieveAllUrl = " https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/getAllCookies";
+            fetch(retrieveAllUrl)
                 .then(response => response.json())
                 .then(data => {
-                    setChosenRecipeData({Ingredients:data.ingredients, Directions:data.directions})
-                    setIngredientList(chosenRecipeData.Ingredients);
-                    setDirectionList(chosenRecipeData.Directions);
-                });
+                    setAllRecipes(data);
+                    console.log(data);
+                    setAllRecipeNames(data.map(item => item.pk));
+                }) 
         }
+        catch{
+            setAllRecipeNames(["Something went wrong when fetching the recipe names."]);
+            console.log("Something went wrong when fetching the recipe names.");
+        }
+  
+        } 
+        fetchAllRecipeData();              
+    }, [])
+
+    
+    console.log("AllRecipeNames: ");
+    console.log(allRecipeNames);
+    
+
+    const retrieveRecipe = () => {
+        console.log("In retrieve Recipe...");
+
+        // const recipe = chosenRecipeData?.map((item, index) => {
+        //     return <li key = {index}>{item}</li>
+        // });
+
+        const retrieveUrl = "https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/retrieveRecipe?recipeId=" + chosenRecipeId
+        fetch(retrieveUrl)
+            .then(response => response.json())
+            .then(data => {
+                setChosenRecipeData({Ingredients:data.list, Directions:data.directions})
+                console.log("ChosenRecipeData: ", chosenRecipeData);
+                // setIngredientList(data.list);
+                // console.log("Ingredient List: ", ingredientList);
+                // setDirectionList(data.directions);
+            })
+            .catch(error => {
+                console.error('Error retrieving recipe:', error)
+            });  
+
+
+        
+        console.log("ChosenRecipeData: ", chosenRecipeData);
+        console.log("Ingredient List: ", ingredientList);
+        
     }
 
     const updateRecipe = () => {
@@ -75,8 +116,13 @@ const Update = () => {
     // const [responseMessage, setResponseMessage] = useState({variant: "", message: ""});
 
     const handleSelectChange = (event) => {
+        console.log(event.target.value);
         setChosenRecipeId(event.target.value);
+        console.log("In Handle Select Change...");
         retrieveRecipe();
+        setIngredientList(chosenRecipeData.list);
+        console.log("Ingredient List: ", ingredientList);
+        setDirectionList(chosenRecipeData.directions);
         
         // const selectedKey = event.target.value;
         // const recipe = recipeList.find(item => Object.keys(item)[0] === selectedKey);
@@ -123,6 +169,7 @@ const Update = () => {
         updateRecipe();
      }
 
+    //region Old Code
     // const handleButtonSave = (event) => {
     //     setResponseMessage({});
 
@@ -174,6 +221,7 @@ const Update = () => {
     //     // })
         
     // }
+    //endregion
 
 
     return (
@@ -185,10 +233,10 @@ const Update = () => {
 
                 <Row className = "m-5">
                     <Col className = "m-2">
-                        <Form.Select aria-label="Default select example" size="lg" onChange = {(event) => handleSelectChange(event)}>
-                            <option disabled selected>Choose A Recipe</option>
-                            {recipeList.map((recipe, index) => (
-                                <option key = {index} value={Object.keys(recipe)[0]} >{Object.keys(recipe)[0]}</option>)    
+                        <Form.Select aria-label="Default select example" defaultValue="title" size="lg" onChange = {(event) => handleSelectChange(event)}>
+                            <option value = "title" disabled >Choose A Recipe</option>
+                            {allRecipeNames.map((recipe, index) => (
+                                <option key = {index} value={Object.values(recipe).pk} >{Object.values(recipe)}</option>)    
                             )}
 
                         </Form.Select>
@@ -198,13 +246,19 @@ const Update = () => {
                 <Row className = "m-4">
                     <Col className = "m-2">
                         <Card style={{ width: '100%' }}>
-                            <Card.Header>{Object.keys(chosenRecipe)[0]}</Card.Header>
-                            <ListGroup variant="flush">
-                                {chosenRecipe[Object.keys(chosenRecipe)[0]].map((ingredients, index) => (
-                                    <ListGroup.Item key = {index}>{Object.values(ingredients)}</ListGroup.Item>)
-                                    
+                            <Card.Title>{chosenRecipeId}</Card.Title>
+                            <Card.Subtitle>Ingredients</Card.Subtitle>
+                            <Card.Text>
+                                {ingredientList && ingredientList.map((ingredient, index) => (
+                                    <li key = {index}>{Object.values(ingredient)}</li>)
                                 )}
-                            </ListGroup>
+                            </Card.Text>
+                            <Card.Subtitle>Directions</Card.Subtitle>
+                            <Card.Text>
+                                {directionList && directionList.map((direction, index) => (
+                                    <li key = {index}>{Object.values(direction)}</li>)
+                                )}
+                            </Card.Text>
                         </Card>
                     </Col>
                     <Col className = "m-2">
@@ -214,8 +268,24 @@ const Update = () => {
                                     <Form>
                                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                             <Form.Label>To add an ingredient or set of directions to this recipe, type the desired addition below, preview your changes and then click SAVE CHANGES.</Form.Label>
-                                            <Form.Control as="textarea" rows={3} placeholder="Enter your addition here" onChange={handleFormControlChange} value = {inputValue}/>
+                                            <Form.Control as="textarea" rows={3} placeholder="Enter your addition here" onChange={handleFormControlChange} value = {newItem}/>
                                         </Form.Group>
+                                        
+                                        <Form.Group>
+                                           <Form.Check
+                                                type="radio"
+                                                name="isIngredient"
+                                                id="Ingredient"
+                                                label="Ingredient"
+                                            /> 
+                                            <Form.Check
+                                                type="radio"
+                                                name="isIngredient"
+                                                id="Directions"
+                                                label="Direction"
+                                            />
+                                        </Form.Group>
+                                        
                                     </Form>
                                 </Col>
                             </Row>
@@ -234,7 +304,7 @@ const Update = () => {
 
                 <Row className="mt-5">
                     <Col>
-                        <Alert variant={responseMessage.variant} onClose = {() => setResponseMessage("")} dismissable>{responseMessage.message}</Alert>
+                        <Alert variant={responseMessage.variant} onClose = {() => setResponseMessage("")} dismissable="true">{responseMessage.message}</Alert>
                     </Col>
                 </Row>
 
