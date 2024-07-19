@@ -2,7 +2,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -18,7 +17,7 @@ const Update = () => {
     const [ingredientList, setIngredientList] = useState([]);
     const [directionList, setDirectionList] = useState([]);
     const [clickedPreview, setClickedPreview] = useState(false);
-    const [allRecipes, setAllRecipes] = useState({});
+    //const [allRecipes, setAllRecipes] = useState({});
     const [allRecipeNames, setAllRecipeNames] = useState([]);
     
 
@@ -30,7 +29,7 @@ const Update = () => {
             fetch(retrieveAllUrl)
                 .then(response => response.json())
                 .then(data => {
-                    setAllRecipes(data);
+                    //setAllRecipes(data);
                     console.log(data);
                     setAllRecipeNames(data.map(item => item.pk));
                 }) 
@@ -43,39 +42,28 @@ const Update = () => {
         } 
         fetchAllRecipeData();              
     }, [])
-
-    
-    console.log("AllRecipeNames: ");
-    console.log(allRecipeNames);
     
 
-    const retrieveRecipe = () => {
-        console.log("In retrieve Recipe...");
-
-        // const recipe = chosenRecipeData?.map((item, index) => {
-        //     return <li key = {index}>{item}</li>
-        // });
-
-        const retrieveUrl = "https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/retrieveRecipe?recipeId=" + chosenRecipeId
-        fetch(retrieveUrl)
-            .then(response => response.json())
-            .then(data => {
-                setChosenRecipeData({Ingredients:data.list, Directions:data.directions})
-                console.log("ChosenRecipeData: ", chosenRecipeData);
-                // setIngredientList(data.list);
-                // console.log("Ingredient List: ", ingredientList);
-                // setDirectionList(data.directions);
-            })
-            .catch(error => {
-                console.error('Error retrieving recipe:', error)
-            });  
-
-
-        
-        console.log("ChosenRecipeData: ", chosenRecipeData);
-        console.log("Ingredient List: ", ingredientList);
-        
-    }
+    const retrieveRecipe = async () => {
+        setChosenRecipeData({ Ingredients: "", Directions: "" });
+    
+        const retrieveUrl = "https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/retrieveRecipe?recipeId=" + chosenRecipeId;
+    
+        try {
+            const response = await fetch(retrieveUrl);
+            if (!response.ok) {
+                throw new Error("Network response was not ok.");
+            }
+            const data = await response.json();
+            console.log(data);
+            setChosenRecipeData({ Ingredients: data.list, Directions: data.directions });
+            setIngredientList(data.list);
+            setDirectionList(data.directions);
+            console.log("ChosenRecipeData: ", chosenRecipeData);
+        } catch (error) {
+            console.error('Error retrieving recipe:', error);
+        }
+    };
 
     const updateRecipe = () => {
         setResponseMessage({});
@@ -83,12 +71,12 @@ const Update = () => {
         const params = {
             method: "POST",
             body: JSON.stringify({
-                isIngredient: isIngredient,
-                newItem: newItem
+                "isIngredient": {isIngredient},
+                "newItem": {newItem}
             })
         }
 
-        const updateUrl = "https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/updateRecipe?listId=" + chosenRecipeId;
+        const updateUrl = "https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/updateRecipe?listId=" + chosenRecipeId + ",isIngredient=" + isIngredient;
 
         fetch(updateUrl, params)
             .then(response => {
@@ -107,60 +95,63 @@ const Update = () => {
             })
     }
 
-
-    // const [recipeList, setRecipeList] = useState({})
-    // const [chosenRecipe, setChosenRecipe] = useState({})
-    // const [chosenRecipeId, setChosenRecipeId] = useState("");
-    // const [inputValue, setInputValue] = useState("");
-    // const [isIngredient, setIsIngredient] = useState("False");
-    // const [responseMessage, setResponseMessage] = useState({variant: "", message: ""});
-
-    const handleSelectChange = (event) => {
+    const HandleSelectChange = (event) => {
         console.log(event.target.value);
-        setChosenRecipeId(event.target.value);
-        console.log("In Handle Select Change...");
-        retrieveRecipe();
-        setIngredientList(chosenRecipeData.list);
-        console.log("Ingredient List: ", ingredientList);
-        setDirectionList(chosenRecipeData.directions);
-        
-        // const selectedKey = event.target.value;
-        // const recipe = recipeList.find(item => Object.keys(item)[0] === selectedKey);
-        // setChosenRecipe(recipe);
+        setChosenRecipeId(event.target.value);     
     }
 
+    useEffect(() => {
+        if (chosenRecipeId !== ""){
+            console.log("In handleSelectchange... ChosenRecipeId: ", chosenRecipeId)
+            console.log("In Handle Select Change...");
+            retrieveRecipe();
+        
+        }
+        
+    }, [chosenRecipeId])
+
+    useEffect(() => {
+        console.log("In second Use effect... ChosenRecipeData = " , chosenRecipeData);
+        setIngredientList(chosenRecipeData.Ingredients || []);
+        setDirectionList(chosenRecipeData.Directions || []);
+
+        console.log("Ingredient List: ", ingredientList);
+        
+    }, [chosenRecipeData])
+
+    useEffect(() => {
+        setDirectionList(chosenRecipeData.Directions || []);
+        console.log("Direction List: " , directionList)
+    }, [chosenRecipeData])
+
     const handleFormControlChange = (event) => {
-        setNewItem((event.target.value).trim());
+        setNewItem((event.target.value));
         
     }
 
     const handleButtonPreview = (event) => {
+        setNewItem(newItem.trim())
         if (newItem !== ""){
             if (isIngredient == "True"){
-                setIngredientList(chosenRecipeData.Ingredients.concat(newItem)); 
+                if (chosenRecipeData.Ingredients){
+                    setIngredientList([...chosenRecipeData.Ingredients, newItem]);
+                }else{
+                    setIngredientList([newItem]);
+                }  
                 setClickedPreview(true);
             }else if (isIngredient == "False"){
-                setDirectionList(chosenRecipeData.Directions.concat(newItem)); 
+                if (chosenRecipeData.Directions){
+                    setDirectionList([...chosenRecipeData.Directions, newItem]); 
+                }else{
+                    setDirectionList([newItem])
+                }
                 setClickedPreview(true);
             }else{
                 console.log("ERROR: MUST SPECIFY IF THIS IS AN INGREDIENT OR DIRECTION")
             }
         } 
-     }
-    // Old Handle Button Preview---------------------------------------------------
-    //     if (newItem !== ""){
-    //         // const recipeName = Object.keys(chosenRecipe)[0];
-    //         // const additionKey = Object.values(chosenRecipe[recipeName]).length + 1;
-
-    //         const newRecipeList = [...chosenRecipe[recipeName], {[additionKey]:inputValue}];
-    //         const updatedRecipe = {[recipeName]:newRecipeList};
-
-    //         setChosenRecipe(updatedRecipe);
-    //     }
-
-    //     // clear form control after add the input
-    //     setInputValue("");
-
+    }
+    
      const handleButtonSave = (event) => {
         if (!clickedPreview){
             handleButtonPreview();
@@ -168,60 +159,6 @@ const Update = () => {
         setChosenRecipeData({Ingredients:ingredientList, Directions:directionList});
         updateRecipe();
      }
-
-    //region Old Code
-    // const handleButtonSave = (event) => {
-    //     setResponseMessage({});
-
-    //     const params = {
-    //         method: 'GET',
-    //         body: JSON.stringify({
-    //             isIngredient: isIngredient,
-    //             newItem: inputValue,
-    //         })
-    //     }
-
-    //     const apiUrl = "https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/updateRecipe" + queryString;
-
-    //     fetch(apiUrl, params)
-    //         .then(response => {
-    //         if (!response.ok) {
-    //           throw new Error('Network response was not ok');
-    //         }
-    //         return response.json();
-    //       })
-    //       .then(_ => {
-    //         setResponseMessage({variant: 'success', message: `${chosenRecipeId} was updated successfully`});
-    //       })
-    //       .catch(_ => {
-    //         setResponseMessage({variant: 'danger', message:`Error in updating ${chosenRecipeId}`});
-    //       });
-
-
-    //     // const updatedRecipeList = recipeList.map(recipe => {
-    //     //     const recipeName = Object.keys(recipe)[0];
-    //     //     if (recipeName === Object.keys(chosenRecipe)[0]){
-    //     //         return chosenRecipe;
-    //     //     }
-    //     //     else{
-    //     //         return recipe;
-    //     //     }
-    //     // });
-
-    //     // setRecipeList(updatedRecipeList);
-
-    //     // setSaveSuccessMsg("The recipe for " + Object.keys(chosenRecipe)[0] + " was successfully updated and saved!");
-    //     // setTimeout(() => {
-    //     //     setSaveSuccessMsg("");
-    //     // }, 60000);
-
-
-    //     // updatedRecipeList.map(recipe => {
-    //     //     console.log(recipe);
-    //     // })
-        
-    // }
-    //endregion
 
 
     return (
@@ -233,7 +170,7 @@ const Update = () => {
 
                 <Row className = "m-5">
                     <Col className = "m-2">
-                        <Form.Select aria-label="Default select example" defaultValue="title" size="lg" onChange = {(event) => handleSelectChange(event)}>
+                        <Form.Select aria-label="Default select example" defaultValue="title" size="lg" onChange = {(event) => HandleSelectChange(event)}>
                             <option value = "title" disabled >Choose A Recipe</option>
                             {allRecipeNames.map((recipe, index) => (
                                 <option key = {index} value={Object.values(recipe).pk} >{Object.values(recipe)}</option>)    
@@ -245,16 +182,16 @@ const Update = () => {
 
                 <Row className = "m-4">
                     <Col className = "m-2">
-                        <Card style={{ width: '100%' }}>
-                            <Card.Title>{chosenRecipeId}</Card.Title>
-                            <Card.Subtitle>Ingredients</Card.Subtitle>
-                            <Card.Text>
+                        <Card style={{ width: '100%' }} >
+                            <Card.Title className = 'm-2'>{chosenRecipeId}</Card.Title>
+                            <Card.Subtitle className = 'm-2'>Ingredients</Card.Subtitle>
+                            <Card.Text className = 'm-2'>
                                 {ingredientList && ingredientList.map((ingredient, index) => (
                                     <li key = {index}>{Object.values(ingredient)}</li>)
                                 )}
                             </Card.Text>
-                            <Card.Subtitle>Directions</Card.Subtitle>
-                            <Card.Text>
+                            <Card.Subtitle className = 'm-2'>Directions</Card.Subtitle>
+                            <Card.Text className = 'm-2'>
                                 {directionList && directionList.map((direction, index) => (
                                     <li key = {index}>{Object.values(direction)}</li>)
                                 )}
@@ -271,18 +208,22 @@ const Update = () => {
                                             <Form.Control as="textarea" rows={3} placeholder="Enter your addition here" onChange={handleFormControlChange} value = {newItem}/>
                                         </Form.Group>
                                         
-                                        <Form.Group>
+                                        <Form.Group className='mb-3'>
                                            <Form.Check
                                                 type="radio"
                                                 name="isIngredient"
                                                 id="Ingredient"
                                                 label="Ingredient"
+
+                                                onClick={() => {setIsIngredient("True")}}
                                             /> 
                                             <Form.Check
                                                 type="radio"
                                                 name="isIngredient"
                                                 id="Directions"
                                                 label="Direction"
+
+                                                onClick={() => {setIsIngredient("False")}}
                                             />
                                         </Form.Group>
                                         
@@ -304,20 +245,9 @@ const Update = () => {
 
                 <Row className="mt-5">
                     <Col>
-                        <Alert variant={responseMessage.variant} onClose = {() => setResponseMessage("")} dismissable="true">{responseMessage.message}</Alert>
+                        <Alert variant={responseMessage.variant} onClose = {() => setResponseMessage("")}>{responseMessage.message}</Alert>
                     </Col>
                 </Row>
-
-{/* 
-                <Row>
-                    <Col>
-                        {saveSuccessMsg &&
-                            <Alert variant="success" onClose={() => setSaveSuccessMsg("")} dismissible>
-                                {saveSuccessMsg}
-                            </Alert>
-                        }     
-                    </Col>
-                </Row> */}
             </Container>
 
 
