@@ -48,6 +48,7 @@ const RetrieveRecipe = () => {
                 setSearchResult({
                     name: data.pk,
                     ingredients: data.list,
+                    directions: data.directions,
                 });
             } else {
                 setSearchResult({ name: searchTerm, notFound: true });
@@ -94,7 +95,7 @@ const RetrieveRecipe = () => {
                         <Card>
                             <Card.Body className="text-center">
                                 <Card.Title>{searchResult.name}</Card.Title>
-                                <p>Yum, that sounds delicious! Unfortunately, although the Cookie Cookbook team is constatnly working to update the website to serve its users the best that it could, that recipe is not yet part of the website. Maybe you can be the first to add it!</p>
+                                <p>Yum, that sounds delicious! Unfortunately, although the Cookie Cookbook team is constantly working to update the website to serve its users the best that it could, that recipe is not yet part of the website. Maybe you can be the first to add it!</p>
                             </Card.Body>
                         </Card>
                     )}
@@ -103,11 +104,14 @@ const RetrieveRecipe = () => {
                         <Card>
                             <Card.Body>
                                 <Card.Title>{searchResult.name}</Card.Title>
+                                <h4>Ingredients:</h4>
                                 <ul>
                                     {searchResult.ingredients && searchResult.ingredients.map((ingredient, index) => (
                                         <li key={index}>{ingredient}</li>
                                     ))}
                                 </ul>
+                                <h4>Directions:</h4>
+                                <p>{searchResult.directions}</p>
                             </Card.Body>
                         </Card>
                     )}
@@ -122,11 +126,14 @@ const RetrieveRecipe = () => {
                             <Card key={index} className="mb-3">
                                 <Card.Body>
                                     <Card.Title>{recipe.name}</Card.Title>
+                                    <h4>Ingredients:</h4>
                                     <ul>
-                                        {recipe.ingredients && recipe.ingredients.map((ingredient, idx) => (
+                                        {recipe.list && recipe.list.map((ingredient, idx) => (
                                             <li key={idx}>{ingredient}</li>
                                         ))}
                                     </ul>
+                                    <h4>Directions:</h4>
+                                    <p>{recipe.directions}</p>
                                 </Card.Body>
                             </Card>
                         ))}
