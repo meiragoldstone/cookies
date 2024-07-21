@@ -66,20 +66,27 @@ const Update = () => {
     };
 
     const updateRecipe = () => {
+        console.log("In updateRecipe...")
         setResponseMessage({});
-        
+        console.log("Isingredient ", isIngredient);
+        console.log("newItem", )
         const params = {
             method: "POST",
             body: JSON.stringify({
-                "isIngredient": {isIngredient},
-                "newItem": {newItem}
+                isIngredient,
+                newItem
             })
         }
 
-        const updateUrl = "https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/updateRecipe?listId=" + chosenRecipeId + ",isIngredient=" + isIngredient;
-
+        const updateUrl = "https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/updateRecipe?listId=" + chosenRecipeId;
+        
+        console.log("Right before fetch...");
+        console.log("URL: ", updateUrl);
+        console.log("Params: ", params);
         fetch(updateUrl, params)
             .then(response => {
+                console.log("In first then...");
+                console.log("Response: ", response)
                 if (!response.ok) {
                     throw new Error("Network response was not ok.");
                 }
