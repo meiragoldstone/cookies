@@ -7,109 +7,129 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
-const RetrieveList = () => {
-    const [listData, setListData] = useState([
-        { id: 1, name: 'Chocolate Chip Cookies', items: ['Flour', 'Sugar', 'Chocolate Chips', 'Oil'] },
-        { id: 2, name: 'Cheesecake Cookies', items: ['Cream Cheese', 'Eggs', 'Sugar'] },
-        { id: 3, name: 'Birthday Cookies', items: ['Flour', 'Sugar', 'Oil', 'Sprinkles'] },
-    ]);
-
-    const [selectedList, setSelectedList] = useState(null);
-    const [searchedList, setSearchedList] = useState('');
-    const [listExists, setListExists] = useState(false);
-
-    const handleDropdownChange = (event) => {
-        const selectedId = parseInt(event.target.value);
-        const list = listData.find(item => item.id === selectedId);
-        setSelectedList(list);
-        setSearchedList('');
-        setListExists(false);
-    };
-
-    const handleInputChange = (event) => {
-        setSearchedList(event.target.value);
-        setSelectedList(null);
-    };
+const RetrieveRecipe = () => {
+    const [recipes, setRecipes] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchResult, setSearchResult] = useState(null);
 
     useEffect(() => {
-        if (searchedList.trim() === '') {
-            setListExists(false);
+        fetchRecipes();
+    }, []);
+
+    const fetchRecipes = async () => {
+        try {
+            const response = await fetch('https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/retrieveRecipe');
+            if (!response.ok) {
+                return;
+            }
+            const data = await response.json();
+            if (Array.isArray(data)) {
+                const sortedRecipes = data.sort((a, b) => a.name.localeCompare(b.name));
+                setRecipes(sortedRecipes);
+            }
+        } catch (error) {
+        }
+    };
+
+    const handleSearch = async () => {
+        if (!searchTerm.trim()) {
+            setSearchResult(null);
             return;
         }
-        
-        const trimmedListName = searchedList.trim().toLowerCase();
-        const exists = listData.some(list => list.name.toLowerCase() === trimmedListName);
-        setListExists(exists);
-    }, [searchedList, listData]);
+
+        try {
+            const response = await fetch(`https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/retrieveRecipe?recipeId=${encodeURIComponent(searchTerm.trim())}`);
+            if (!response.ok) {
+                setSearchResult({ name: searchTerm, notFound: true });
+                return;
+            }
+            const data = await response.json();
+            if (data && data.pk) {
+                setSearchResult({
+                    name: data.pk,
+                    ingredients: data.list,
+                });
+            } else {
+                setSearchResult({ name: searchTerm, notFound: true });
+            }
+        } catch (error) {
+            setSearchResult({ name: searchTerm, notFound: true });
+        }
+    };
 
     const clearSelection = () => {
-        setSelectedList(null);
-        setSearchedList('');
-        setListExists(false);
+        setSearchTerm('');
+        setSearchResult(null);
     };
 
     return (
         <Container className="mt-5">
-            <h1 className="text-center mb-4">Retrieve List from Database</h1>
-
-            <Row className="justify-content-center mb-4">
-                <Col md={6}>
-                    <Form.Select
-                        value={selectedList ? selectedList.id : ''}
-                        onChange={handleDropdownChange}
-                    >
-                        <option value="">Select a list...</option>
-                        {listData.map((list) => (
-                            <option key={list.id} value={list.id}>{list.name}</option>
-                        ))}
-                    </Form.Select>
-                </Col>
-            </Row>
-
-            <Row className="justify-content-center mb-3">
-                <Col md={6}>
-                    <p className="text-center">Type a list name to see if it exists:</p>
-                </Col>
-            </Row>
+            <h1 className="text-center mb-4">Find a Recipe!</h1>
 
             <Row className="justify-content-center mb-4">
                 <Col md={6}>
                     <Form.Group className="mb-3">
                         <Form.Control
                             type="text"
-                            placeholder="Enter list name..."
-                            value={searchedList}
-                            onChange={handleInputChange}
+                            placeholder="Search recipe..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
                         <Button
                             variant="outline-primary"
+                            onClick={handleSearch}
+                            className="mt-2"
+                        >
+                            Search
+                        </Button>
+                        <Button
+                            variant="outline-secondary"
                             onClick={clearSelection}
+                            className="mt-2 ms-2"
                         >
                             Clear Selection
                         </Button>
                     </Form.Group>
-                    {searchedList.trim() !== '' && listExists &&
-                        <p className="text-success mt-2">List with name "{searchedList}" exists.</p>
-                    }
-                    {searchedList.trim() !== '' && !listExists &&
-                        <p className="text-danger mt-2">List with name "{searchedList}" does not exist.</p>
-                    }
-                </Col>
-            </Row>
+                    {searchResult && searchResult.notFound && (
+                        <Card>
+                            <Card.Body className="text-center">
+                                <Card.Title>{searchResult.name}</Card.Title>
+                                <p>Yum, that sounds delicious! Unfortunately, although the Cookie Cookbook team is constatnly working to update the website to serve its users the best that it could, that recipe is not yet part of the website. Maybe you can be the first to add it!</p>
+                            </Card.Body>
+                        </Card>
+                    )}
 
-            {selectedList && (
-                <Row className="justify-content-center mt-4">
-                    <Col md={6}>
+                    {searchResult && !searchResult.notFound && (
                         <Card>
                             <Card.Body>
-                                <Card.Title>{selectedList.name}</Card.Title>
-                                <ul className="list-group list-group-flush">
-                                    {selectedList.items.map((item, index) => (
-                                        <li key={index} className="list-group-item">{item}</li>
+                                <Card.Title>{searchResult.name}</Card.Title>
+                                <ul>
+                                    {searchResult.ingredients && searchResult.ingredients.map((ingredient, index) => (
+                                        <li key={index}>{ingredient}</li>
                                     ))}
                                 </ul>
                             </Card.Body>
                         </Card>
+                    )}
+                </Col>
+            </Row>
+
+            {recipes.length > 0 && (
+                <Row className="justify-content-center mb-4">
+                    <Col md={6}>
+                        <h2 className="text-center">All Recipes</h2>
+                        {recipes.map((recipe, index) => (
+                            <Card key={index} className="mb-3">
+                                <Card.Body>
+                                    <Card.Title>{recipe.name}</Card.Title>
+                                    <ul>
+                                        {recipe.ingredients && recipe.ingredients.map((ingredient, idx) => (
+                                            <li key={idx}>{ingredient}</li>
+                                        ))}
+                                    </ul>
+                                </Card.Body>
+                            </Card>
+                        ))}
                     </Col>
                 </Row>
             )}
@@ -117,4 +137,4 @@ const RetrieveList = () => {
     );
 };
 
-export default RetrieveList;
+export default RetrieveRecipe;
