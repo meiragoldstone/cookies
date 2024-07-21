@@ -1,100 +1,14 @@
-
-/*import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-const CookieRecipeForm = () => {
-  const [recipeName, setRecipeName] = useState('');
-  const [ingredient, setIngredient] = useState('');
-  const [ingredients, setIngredients] = useState([]);
-
-  const handleRecipeNameChange = (event) => {
-    setRecipeName(event.target.value);
-  };
-
-  const handleIngredientChange = (event) => {
-    setIngredient(event.target.value);
-  };
-
-  const handleAddIngredient = (event) => {
-    event.preventDefault();
-    if (ingredient.trim() !== '') {
-      setIngredients([...ingredients, ingredient]);
-      setIngredient('');
-    }
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    alert(`Recipe Name: ${recipeName}\nIngredients: ${ingredients.join(', ')}`);
-  };
-
-  return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <h2 className="text-center mb-4">Enter Your Cookie Recipe</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="recipeName">Recipe Name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="recipeName"
-                placeholder="Enter recipe name"
-                value={recipeName}
-                onChange={handleRecipeNameChange}
-              />
-            </div>
-            <div className="form-group mt-3">
-              <label htmlFor="ingredient">Ingredient</label>
-              <input
-                type="text"
-                className="form-control"
-                id="ingredient"
-                placeholder="Enter ingredient"
-                value={ingredient}
-                onChange={handleIngredientChange}
-              />
-            </div>
-            <button
-              type="button"
-              className="btn btn-secondary mt-3"
-              onClick={handleAddIngredient}
-            >
-              Add Ingredient
-            </button>
-            <ul className="list-group mt-3">
-              {ingredients.map((item, index) => (
-                <li key={index} className="list-group-item">
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <button type="submit" className="btn btn-primary mt-3">
-              Submit Recipe
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default CookieRecipeForm; */
-
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const CookieRecipeForm = () => {
-  const [recipeName, setRecipeName] = useState('');
+  const [recipeId, setRecipeId] = useState('');
   const [ingredient, setIngredient] = useState('');
-  const [ingredients, setIngredients] = useState([]);
+  const [recipe, setRecipe] = useState([]);
   const [instructions, setInstructions] = useState('');
-  const [bakeTime, setBakeTime] = useState('');
-  const [servings, setServings] = useState('');
 
-  const handleRecipeNameChange = (event) => {
-    setRecipeName(event.target.value);
+  const handleRecipeIdChange = (event) => {
+    setRecipeId(event.target.value);
   };
 
   const handleIngredientChange = (event) => {
@@ -105,25 +19,46 @@ const CookieRecipeForm = () => {
     setInstructions(event.target.value);
   };
 
-  const handleBakeTimeChange = (event) => {
-    setBakeTime(event.target.value);
-  };
-
-  const handleServingsChange = (event) => {
-    setServings(event.target.value);
-  };
-
   const handleAddIngredient = (event) => {
     event.preventDefault();
     if (ingredient.trim() !== '') {
-      setIngredients([...ingredients, ingredient]);
+      setRecipe([...recipe, ingredient]);
       setIngredient('');
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    alert(`Recipe Name: ${recipeName}\nIngredients: ${ingredients.join(', ')}\nInstructions: ${instructions}\nBake Time: ${bakeTime}\nServings: ${servings}`);
+
+    const recipeData = {
+      recipeId: recipeId,
+      recipe: recipe,
+      instructions: instructions
+    };
+
+    try {
+      const response = await fetch(' https://lqtpgzkl41.execute-api.us-east-1.amazonaws.com/default/createRecipe', {
+        method: 'POST',
+        
+        body: JSON.stringify(recipeData)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert('Recipe submitted successfully!');
+        console.log(data);
+        // Clear form fields after successful submission
+        setRecipeId('');
+        setRecipe([]);
+        setInstructions('');
+      } else {
+        alert('Failed to submit recipe');
+        console.error('Error:', response.statusText);
+      }
+    } catch (error) {
+      alert('Failed to submit recipe');
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -133,14 +68,14 @@ const CookieRecipeForm = () => {
           <h2 className="text-center mb-4">Enter Your Cookie Recipe</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="recipeName">Recipe Name</label>
+              <label htmlFor="recipeId">Recipe ID</label>
               <input
                 type="text"
                 className="form-control"
-                id="recipeName"
-                placeholder="Enter recipe name"
-                value={recipeName}
-                onChange={handleRecipeNameChange}
+                id="recipeId"
+                placeholder="Enter recipe ID"
+                value={recipeId}
+                onChange={handleRecipeIdChange}
               />
             </div>
             <div className="form-group mt-3">
@@ -162,7 +97,7 @@ const CookieRecipeForm = () => {
               Add Ingredient
             </button>
             <ul className="list-group mt-3">
-              {ingredients.map((item, index) => (
+              {recipe.map((item, index) => (
                 <li key={index} className="list-group-item">
                   {item}
                 </li>
@@ -178,28 +113,6 @@ const CookieRecipeForm = () => {
                 onChange={handleInstructionsChange}
               />
             </div>
-            <div className="form-group mt-3">
-              <label htmlFor="bakeTime">Bake Time</label>
-              <input
-                type="text"
-                className="form-control"
-                id="bakeTime"
-                placeholder="Enter bake time"
-                value={bakeTime}
-                onChange={handleBakeTimeChange}
-              />
-            </div>
-            <div className="form-group mt-3">
-              <label htmlFor="servings">Number of Servings</label>
-              <input
-                type="text"
-                className="form-control"
-                id="servings"
-                placeholder="Enter number of servings"
-                value={servings}
-                onChange={handleServingsChange}
-              />
-            </div>
             <button type="submit" className="btn btn-primary mt-3">
               Submit Recipe
             </button>
@@ -211,3 +124,4 @@ const CookieRecipeForm = () => {
 };
 
 export default CookieRecipeForm;
+
