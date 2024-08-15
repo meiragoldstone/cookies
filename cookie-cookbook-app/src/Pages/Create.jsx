@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const CookieRecipeForm = () => {
   const [recipeId, setRecipeId] = useState('');
   const [ingredient, setIngredient] = useState('');
-  const [recipe, setRecipe] = useState([]);
+  const [recipe, setRecipe] = useState({list:[], instructions:[]});
   const [instructions, setInstructions] = useState('');
 
   const handleRecipeIdChange = (event) => {
@@ -22,8 +22,18 @@ const CookieRecipeForm = () => {
   const handleAddIngredient = (event) => {
     event.preventDefault();
     if (ingredient.trim() !== '') {
-      setRecipe([...recipe, ingredient]);
+      let newIngredients = [...recipe.list, ingredient];
+      setRecipe({list:[...newIngredients], instructions: [...recipe.instructions]});
       setIngredient('');
+    }
+  };
+
+  const handleAddInstruction = (event) => {
+    event.preventDefault();
+    if (instructions.trim() !== '') {
+      let newInstructions = [...recipe.instructions, instructions];
+      setRecipe({list:[...recipe.list], instructions: [...newInstructions]});
+      setInstructions("");
     }
   };
 
@@ -32,8 +42,8 @@ const CookieRecipeForm = () => {
 
     const recipeData = {
       recipeId: recipeId,
-      recipe: recipe,
-      instructions: instructions
+      recipe: recipe.list,
+      instructions: recipe.instructions
     };
 
     try {
@@ -59,6 +69,9 @@ const CookieRecipeForm = () => {
       alert('Failed to submit recipe');
       console.error('Error:', error);
     }
+
+    setRecipeId("");
+    setRecipe({list:[], instructions:[]});
   };
 
   return (
@@ -97,7 +110,7 @@ const CookieRecipeForm = () => {
               Add Ingredient
             </button>
             <ul className="list-group mt-3">
-              {recipe.map((item, index) => (
+              {recipe.list.map((item, index) => (
                 <li key={index} className="list-group-item">
                   {item}
                 </li>
@@ -113,6 +126,20 @@ const CookieRecipeForm = () => {
                 onChange={handleInstructionsChange}
               />
             </div>
+            <button
+              type="button"
+              className="btn btn-secondary mt-3"
+              onClick={handleAddInstruction}
+            >
+              Add Instruction
+            </button>
+            <ul className="list-group mt-3">
+              {recipe.instructions.map((item, index) => (
+                <li key={index} className="list-group-item">
+                  {item}
+                </li>
+              ))}
+            </ul>
             <button type="submit" className="btn btn-primary mt-3">
               Submit Recipe
             </button>
