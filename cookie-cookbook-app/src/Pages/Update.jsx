@@ -240,10 +240,10 @@ const Update = () => {
 
                             <Row>
                                 <Col>
-                                    <Button variant="dark" onClick={handleButtonPreview}>PREVIEW</Button>
+                                    <Button variant="secondary" onClick={handleButtonPreview}>PREVIEW</Button>
                                 </Col>
                                 <Col>
-                                    <Button variant="dark" onClick={handleButtonSave}>SAVE CHANGES</Button>
+                                    <Button variant="primary" onClick={handleButtonSave}>SAVE CHANGES</Button>
                                 </Col>
                             </Row>
                         </Container>           
