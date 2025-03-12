@@ -1,0 +1,87 @@
+@import "bootstrap/scss/functions"; 
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+
+:root{
+  --primary: #acacac;
+  --secondary: #cfe2ff;
+  --success: #728e59;
+  --danger: #b85c5c;
+  --info: rgb(122, 137, 176);
+  --dark: #4a4a4af9;
+  --light: #c9c5c5;
+
+
+}
+$theme-colors: (
+  "primary": #acacac,
+  "secondary": #cfe2ff,
+  "success": #728e59,
+  "danger": #b85c5c,
+  "info": rgb(122, 137, 176),
+  "dark": #4a4a4af9,
+  "light": #c9c5c5 
+);
+
+div{
+  color: var(--dark);
+}
+
+// Custom card class for pageTitle cards
+.page-title .card, .page-title.card{
+  background-color: var(--info)
+}
+
+// Custom Container Class or Home page Containers
+.home-container.container, .home-container{
+  background-color: var(--primary);
+  width: 100%;
+  padding: 5%
+}
+
+// Custom Home Sign in Button styling
+.home-sign-in{
+  width: 70%
+}
+
+// Custom button styling for buttons on the portal page
+.portal-page-btn{
+  width: 20%;
+  height: 50%;
+  background-color: var(--light);
+  margin:2%
+}
+.link{
+    color: var(--dark);
+}
+
+// .form-select{
+//   max-width: 50%
+// }
+
+.stack-file-control{
+  width:35%
+}
+.stack-select{
+  width: 35%
+}
+.file-row{
+  min-height: 7em;
+}
+
+.w-52{
+  width:52%
+}
+
+.w-48{
+  width:48%
+}
+.w-100{
+  width:100%
+}
+
+
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+@import '~bootstrap/scss/bootstrap.scss';
